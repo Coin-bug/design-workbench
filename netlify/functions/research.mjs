@@ -1,7 +1,7 @@
 const TAVILY_SEARCH_URL = "https://api.tavily.com/search";
 const GEMINI_MODEL_DEFAULT = "gemini-2.0-flash";
 const GEMINI_FALLBACK_MODELS = ["gemini-2.0-flash", "gemini-2.5-flash-lite", "gemini-2.5-flash"];
-const RESEARCH_MAX_OUTPUT_TOKENS = 3000;
+const RESEARCH_MAX_OUTPUT_TOKENS = 1800;
 
 function envValue(key) {
   return globalThis.Netlify?.env?.get?.(key) || globalThis.process?.env?.[key] || "";
@@ -86,7 +86,7 @@ ${sources}
 1. 只用大白话，不要堆术语。
 2. 必须带来源链接。
 3. 不要写商业付费、风险、MVP。
-4. 直接输出 Markdown。
+4. 直接输出 Markdown，但不要使用表格。
 5. 每节控制在 3 条以内，优先保证完整返回。
 
 # 竞品分析简报
@@ -97,15 +97,15 @@ ${sources}
 
 ## 2. 可参考对象
 
-用表格列 3-5 个对象：对象、怎么做、可学什么、来源。
+列 3-5 个对象。每个对象用一条项目符号，包含“它怎么做、我们可学什么、来源”。
 
 ## 3. 用户痛点
 
-用表格列 3 条：痛点、用户会怎么吐槽、设计启发。
+列 3 条项目符号。每条包含“痛点、用户会怎么吐槽、设计启发”。
 
 ## 4. 我们怎么做得不一样
 
-用表格列 3 条：方向、具体做法、页面注意点。
+列 3 条项目符号。每条包含“方向、具体做法、页面注意点”。
 
 ## 5. 来源链接`;
 }
