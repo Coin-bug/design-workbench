@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>设计工作台</title>
+    <link rel="stylesheet" href="./public/styles.css?v=20260528-border" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="brand">
+        <span class="brand-dot"></span>
+        <span>设计工作台</span>
+      </div>
+      <button class="ghost-btn" data-open-modal="settingsModal" hidden aria-hidden="true" tabindex="-1">设置接口</button>
+    </header>
+
+    <main class="home">
+      <section class="hero">
+        <p class="label">DESIGN WORKBENCH</p>
+        <h1>把麻烦的设计活，变成一键处理。</h1>
+        <p class="hero-text">
+          选一个功能，填一点信息，剩下的交给网页处理。所有操作都在弹窗里完成，不用来回找入口。
+        </p>
+      </section>
+
+      <section class="entry-grid" aria-label="功能入口">
+        <button class="entry-card card-blue" data-open-modal="researchModal">
+          <span>01</span>
+          <strong>查竞品</strong>
+          <em>告诉我目标和竞品，一键生成分析报告。</em>
+        </button>
+        <button class="entry-card card-green" data-open-modal="promptModal">
+          <span>02</span>
+          <strong>推 Prompt</strong>
+          <em>上传一张图，推演可复用的出图提示词。</em>
+        </button>
+        <button class="entry-card card-yellow" data-open-modal="auditModal">
+          <span>03</span>
+          <strong>查差异</strong>
+          <em>上传两张图，在实现图上标出问题。</em>
+        </button>
+      </section>
+    </main>
+
+    <div class="modal" id="researchModal" aria-hidden="true">
+      <div class="modal-panel modal-wide">
+        <div class="modal-head">
+          <div>
+            <p class="label">查竞品</p>
+            <h2>输入一句话，生成报告</h2>
+          </div>
+          <button class="icon-btn" data-close-modal>×</button>
+        </div>
+        <label class="field">
+          你想分析什么？
+          <textarea id="researchInput" placeholder="例如：我要做一个给 UI 设计师用的 AI 工具站，竞品可以看 Galileo、Uizard、Figma AI、Motiff，帮我分析它们怎么做、用户痛点和我的差异化方向。"></textarea>
+        </label>
+        <div class="modal-actions">
+          <button class="primary-btn" id="runResearchBtn">生成报告</button>
+          <button class="ghost-btn" id="copyResearchBtn">复制报告</button>
+        </div>
+        <article class="markdown-card" id="researchReport">报告会显示在这里。</article>
+      </div>
+    </div>
+
+    <div class="modal" id="promptModal" aria-hidden="true">
+      <div class="modal-panel modal-wide">
+        <div class="modal-head">
+          <div>
+            <p class="label">推 Prompt</p>
+            <h2>上传图片，整理提示词</h2>
+          </div>
+          <button class="icon-btn" data-close-modal>×</button>
+        </div>
+        <label class="upload-card single-upload">
+          <span class="upload-title">上传参考图</span>
+          <small class="upload-desc">网页会分析画面内容、风格、镜头、光影和关键词</small>
+          <input class="file-input" id="promptImageInput" type="file" accept="image/*" />
+          <span class="file-trigger">选择图片</span>
+          <small class="file-name" data-file-name-for="promptImageInput">还没有选择图片</small>
+        </label>
+        <div class="modal-actions">
+          <button class="primary-btn" id="runPromptBtn">生成提示词</button>
+          <button class="ghost-btn" id="copyPromptBtn">复制提示词</button>
+        </div>
+        <p class="action-note" id="promptCopyStatus" aria-live="polite">生成后，可以复制整理好的提示词。</p>
+        <article class="markdown-card" id="promptReport">提示词会显示在这里。</article>
+      </div>
+    </div>
+
+    <div class="modal" id="auditModal" aria-hidden="true">
+      <div class="modal-panel modal-wide">
+        <div class="modal-head">
+          <div>
+            <p class="label">查差异</p>
+            <h2>直接在实现图上标问题</h2>
+          </div>
+          <button class="icon-btn" data-close-modal>×</button>
+        </div>
+        <div class="two-fields">
+          <label class="upload-card">
+            <span class="upload-title">设计稿</span>
+            <small class="upload-desc">作为标准</small>
+            <input class="file-input" id="designInput" type="file" accept="image/*" />
+            <span class="file-trigger">选择图片</span>
+            <small class="file-name" data-file-name-for="designInput">还没有选择图片</small>
+          </label>
+          <label class="upload-card">
+            <span class="upload-title">实现图</span>
+            <small class="upload-desc">在这张图上标问题</small>
+            <input class="file-input" id="realInput" type="file" accept="image/*" />
+            <span class="file-trigger">选择图片</span>
+            <small class="file-name" data-file-name-for="realInput">还没有选择图片</small>
+          </label>
+        </div>
+        <div class="modal-actions">
+          <button class="primary-btn" id="runAuditBtn">开始对比</button>
+          <button class="ghost-btn" id="saveAuditImageBtn">保存标注图</button>
+        </div>
+        <div class="audit-layout">
+          <canvas id="auditCanvas"></canvas>
+          <div class="plain-report" id="auditText">结果会显示在这里。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="settingsModal" aria-hidden="true">
+      <div class="modal-panel">
+        <div class="modal-head">
+          <div>
+            <p class="label">接口设置</p>
+            <h2>填好后才能一键生成</h2>
+          </div>
+          <button class="icon-btn" data-close-modal>×</button>
+        </div>
+        <label class="field">
+          Tavily Key
+          <input id="tavilyKey" type="password" placeholder="用来联网查资料" />
+        </label>
+        <label class="field">
+          Gemini Key
+          <input id="geminiKey" type="password" placeholder="用来整理报告和理解图片" />
+        </label>
+        <label class="field">
+          Gemini 模型
+          <input id="geminiModel" placeholder="gemini-2.5-flash" />
+        </label>
+        <button class="primary-btn full" id="saveSettingsBtn">保存</button>
+      </div>
+    </div>
+
+    <script src="./public/app.js?v=20260529-error-copy-fix"></script>
+  </body>
+</html>

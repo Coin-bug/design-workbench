@@ -1,0 +1,8 @@
+.netlify/
+node_modules/
+config.local.json
+API配置填写.json
+*.zip
+.DS_Store
+*.log
+.last-url

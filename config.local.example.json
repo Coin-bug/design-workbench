@@ -1,0 +1,8 @@
+{
+  "tavilyKey": "填你的 Tavily Key",
+  "geminiKey": "填你的 Gemini Key",
+  "geminiModel": "gemini-2.0-flash",
+  "cloudflareAccountId": "填你的 Cloudflare Account ID",
+  "cloudflareApiToken": "填你的 Cloudflare Token",
+  "cloudflareImageModel": "@cf/black-forest-labs/flux-1-schnell"
+}
