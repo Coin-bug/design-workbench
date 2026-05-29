@@ -112,9 +112,11 @@ ${sources}
 
 async function geminiGenerate(apiKey, model, prompt, temperature = 0.2) {
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+  const generationConfig = { temperature, maxOutputTokens: RESEARCH_MAX_OUTPUT_TOKENS };
+  if (model.includes("2.5")) generationConfig.thinkingConfig = { thinkingBudget: 0 };
   const result = await postJson(url, {
     contents: [{ role: "user", parts: [{ text: prompt }] }],
-    generationConfig: { temperature, maxOutputTokens: RESEARCH_MAX_OUTPUT_TOKENS },
+    generationConfig,
   });
   return result.candidates?.[0]?.content?.parts?.map((part) => part.text || "").join("\n").trim() || "";
 }

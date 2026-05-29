@@ -60,9 +60,11 @@ function dataUrlToPart(dataUrl) {
 
 async function geminiGenerate(apiKey, model, parts, temperature = 0.4) {
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+  const generationConfig = { temperature };
+  if (model.includes("2.5")) generationConfig.thinkingConfig = { thinkingBudget: 0 };
   const result = await postJson(url, {
     contents: [{ role: "user", parts }],
-    generationConfig: { temperature },
+    generationConfig,
   });
   return result.candidates?.[0]?.content?.parts?.map((part) => part.text || "").join("\n").trim() || "";
 }
