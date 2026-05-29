@@ -116,7 +116,7 @@ async function geminiGenerate(apiKey, model, prompt, temperature = 0.2) {
     contents: [{ role: "user", parts: [{ text: prompt }] }],
     generationConfig: { temperature, maxOutputTokens: RESEARCH_MAX_OUTPUT_TOKENS },
   });
-  return result.candidates?.[0]?.content?.parts?.[0]?.text || "";
+  return result.candidates?.[0]?.content?.parts?.map((part) => part.text || "").join("\n").trim() || "";
 }
 
 async function geminiGenerateWithFallback(apiKey, preferredModel, prompt) {

@@ -64,7 +64,7 @@ async function geminiGenerate(apiKey, model, parts, temperature = 0.4) {
     contents: [{ role: "user", parts }],
     generationConfig: { temperature },
   });
-  return result.candidates?.[0]?.content?.parts?.[0]?.text || "";
+  return result.candidates?.[0]?.content?.parts?.map((part) => part.text || "").join("\n").trim() || "";
 }
 
 async function geminiGenerateWithFallback(apiKey, preferredModel, parts) {
