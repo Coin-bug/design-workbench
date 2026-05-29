@@ -1,6 +1,7 @@
 const TAVILY_SEARCH_URL = "https://api.tavily.com/search";
 const GEMINI_MODEL_DEFAULT = "gemini-2.0-flash";
 const GEMINI_FALLBACK_MODELS = ["gemini-2.0-flash", "gemini-2.5-flash-lite", "gemini-2.5-flash"];
+const RESEARCH_MAX_OUTPUT_TOKENS = 1800;
 
 function envValue(key) {
   return globalThis.Netlify?.env?.get?.(key) || globalThis.process?.env?.[key] || "";
@@ -59,7 +60,7 @@ async function tavilySearch(apiKey, query) {
     {
       query: `${query} 竞品 用户痛点 体验设计 做法`,
       search_depth: "basic",
-      max_results: 8,
+      max_results: 5,
       include_answer: true,
       include_raw_content: false,
     },
@@ -86,6 +87,7 @@ ${sources}
 2. 必须带来源链接。
 3. 不要写商业付费、风险、MVP。
 4. 直接输出 Markdown。
+5. 内容要精简，优先保证网页快速返回。
 
 # 竞品分析报告
 
@@ -96,7 +98,7 @@ ${sources}
 | 竞品 | 它是做什么的 | 它怎么做 | 来源 |
 |---|---|---|---|
 
-## 3. 这些竞品的共同做法
+## 3. 共同做法
 
 | 做法 | 好在哪里 | 有什么问题 |
 |---|---|---|
@@ -118,7 +120,7 @@ async function geminiGenerate(apiKey, model, prompt, temperature = 0.2) {
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
   const result = await postJson(url, {
     contents: [{ role: "user", parts: [{ text: prompt }] }],
-    generationConfig: { temperature },
+    generationConfig: { temperature, maxOutputTokens: RESEARCH_MAX_OUTPUT_TOKENS },
   });
   return result.candidates?.[0]?.content?.parts?.[0]?.text || "";
 }
