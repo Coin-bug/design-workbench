@@ -1,7 +1,7 @@
 const TAVILY_SEARCH_URL = "https://api.tavily.com/search";
 const GEMINI_MODEL_DEFAULT = "gemini-2.0-flash";
 const GEMINI_FALLBACK_MODELS = ["gemini-2.0-flash", "gemini-2.5-flash-lite", "gemini-2.5-flash"];
-const RESEARCH_MAX_OUTPUT_TOKENS = 1800;
+const RESEARCH_MAX_OUTPUT_TOKENS = 3000;
 
 function envValue(key) {
   return globalThis.Netlify?.env?.get?.(key) || globalThis.process?.env?.[key] || "";
@@ -74,7 +74,7 @@ function buildResearchPrompt(query, results) {
 URL: ${item.url || ""}
 摘要: ${item.content || ""}`).join("\n\n");
 
-  return `请基于联网搜索结果，写一份小白也能看懂的 UI/UX 竞品分析报告。
+  return `请基于联网搜索结果，写一份小白也能看懂的 UI/UX 竞品分析简报。
 
 用户想分析：
 ${query}
@@ -87,33 +87,27 @@ ${sources}
 2. 必须带来源链接。
 3. 不要写商业付费、风险、MVP。
 4. 直接输出 Markdown。
-5. 内容要精简，优先保证网页快速返回。
+5. 每节控制在 3 条以内，优先保证完整返回。
 
-# 竞品分析报告
+# 竞品分析简报
 
-## 1. 我们要解决什么问题
+## 1. 核心问题
 
-## 2. 可以参考哪些竞品
+用 2-3 句话说明用户真正想解决什么。
 
-| 竞品 | 它是做什么的 | 它怎么做 | 来源 |
-|---|---|---|---|
+## 2. 可参考对象
 
-## 3. 共同做法
+用表格列 3-5 个对象：对象、怎么做、可学什么、来源。
 
-| 做法 | 好在哪里 | 有什么问题 |
-|---|---|---|
+## 3. 用户痛点
 
-## 4. 用户真正烦什么
+用表格列 3 条：痛点、用户会怎么吐槽、设计启发。
 
-| 痛点 | 用户会怎么吐槽 | 对设计有什么影响 |
-|---|---|---|
+## 4. 我们怎么做得不一样
 
-## 5. 我们可以怎么做得不一样
+用表格列 3 条：方向、具体做法、页面注意点。
 
-| 方向 | 具体怎么做 | 页面设计要注意什么 |
-|---|---|---|
-
-## 6. 来源链接`;
+## 5. 来源链接`;
 }
 
 async function geminiGenerate(apiKey, model, prompt, temperature = 0.2) {
